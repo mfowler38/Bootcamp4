@@ -15,21 +15,32 @@ class App extends React.Component {
 
   filterUpdate(value) {
     //Here you will need to set the filterText property of state to the value passed into this function
+    this.setState({
+      filterText: value
+    })
   }
 
   selectedUpdate(id) {
     //Here you will need to update the selectedBuilding property of state to the id passed into this function
+    this.setState({
+      selectedBuilding: id
+    })
+
+    console.log(id)
   }
 
   render() {
-    
+
     return (
       <div className="bg">
         <div className="row">
           <h1>UF Directory App</h1>
         </div>
 
-        <Search/>
+        <Search 
+          filterText = {this.state.filterText}
+          filterUpdate={this.filterUpdate.bind(this)}
+        />
         <main>
           <div className="row">
             <div className="column1">
@@ -42,12 +53,17 @@ class App extends React.Component {
                   </tr>
                   <BuildingList
                     data={this.props.data}
+                    filterText={this.state.filterText}
+                    selectedUpdate={this.selectedUpdate.bind(this)}
                   />
                 </table>
               </div>
             </div>
             <div className="column2">
-              <ViewBuilding />
+              <ViewBuilding 
+                data={this.props.data}
+                selectedBuilding={this.state.selectedBuilding}
+              />
             </div>
           </div>
           <Credit />
