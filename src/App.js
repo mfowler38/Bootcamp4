@@ -9,9 +9,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      myData: this.props.data,
       filterText: '',
       selectedBuilding: 0,
-      addName: ''
+      addName: '', 
+      addCode: '',
+      addLat: '',
+      addLong: '',
+      addAddress: '',
+      buildingID: 149
     };
   }
 
@@ -29,9 +35,41 @@ class App extends React.Component {
     })
   }
 
-  addNameUpdate(value) {
+  valuesUpdate(newCode, newName, newLat, newLong, newAddr) {
     this.setState({
-      addName: value
+      addCode: newCode,
+      addName: newName,
+      addLat: newLat,
+      addLong: newLong,
+      addAddress: newAddr
+    })
+    console.log(newCode, ' ', newName, ' ', newLat, ' ', newLong, ' ', newAddr)
+  }
+
+  addBuildingUpdate() {
+    var arr = this.state.myData
+    if(this.state.addLat === '' && this.state.addLong === '' && this.state.addAddress === '') {
+      arr.push({
+        id: this.state.buildingID,
+        code: this.state.addCode,
+        name: this.state.addName
+      })
+    } else {
+      arr.push({
+        id: this.state.buildingID,
+        code: this.state.addCode,
+        name: this.state.addName,
+        coordinates: {
+            latitude: this.state.addLat,
+            longitude: this.state.addLong
+        },
+        address: this.state.addAddress
+      })
+    }
+
+    this.setState({
+      buildingID: (this.state.buildingID + 1),
+      myData: arr
     })
   }
 
@@ -58,7 +96,7 @@ class App extends React.Component {
                     </td>
                   </tr>
                   <BuildingList
-                    data={this.props.data}
+                    data={this.state.myData}
                     filterText={this.state.filterText}
                     selectedUpdate={this.selectedUpdate.bind(this)}
                   />
@@ -67,15 +105,20 @@ class App extends React.Component {
             </div>
             <div className="column2">
               <ViewBuilding 
-                data={this.props.data}
+                data={this.state.myData}
                 selectedBuilding={this.state.selectedBuilding}
               />
             </div>
           </div>
           <AddBuilding
-            data={this.props.data}
+            data={this.state.myData}
+            addCode={this.state.addCode}
             addName={this.state.addName}
-            addNameUpdate={this.addNameUpdate.bind(this)}
+            addLat={this.state.addLat}
+            addLong={this.state.addLong}
+            addAddress={this.state.addAddress}
+            valuesUpdate={this.valuesUpdate.bind(this)}
+            addBuildingUpdate={this.addBuildingUpdate.bind(this)}
           />
           <Credit />
         </main>
