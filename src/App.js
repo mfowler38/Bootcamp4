@@ -3,6 +3,7 @@ import Search from './components/Search';
 import ViewBuilding from './components/ViewBuilding';
 import BuildingList from './components/BuildingList';
 import AddBuilding from './components/AddBuilding';
+import RemoveBuilding from './components/RemoveBuilding';
 import Credit from './components/Credit';
 
 class App extends React.Component {
@@ -17,7 +18,8 @@ class App extends React.Component {
       addLat: '',
       addLong: '',
       addAddress: '',
-      buildingID: 149
+      buildingID: 149, 
+      remCode: ''
     };
   }
 
@@ -73,18 +75,38 @@ class App extends React.Component {
     })
   }
 
+  updateRemove(value) {
+    this.setState({
+      remCode: value
+    })
+  }
+
+  remBuilding() {
+    var arr = this.state.myData
+    var cod = this.state.remCode
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].code === cod) {
+        arr.splice(i, 1)
+      }
+    }
+
+    this.setState({
+      myData: arr
+    })
+  }
+
   render() {
 
     return (
+      <div>
+      <header>
+          <div className="titleText">UF Directory App</div>
+          <Search 
+            filterText = {this.state.filterText}
+            filterUpdate={this.filterUpdate.bind(this)}
+          />
+      </header>
       <div className="bg">
-        <div className="row">
-          <h1>UF Directory App</h1>
-        </div>
-
-        <Search 
-          filterText = {this.state.filterText}
-          filterUpdate={this.filterUpdate.bind(this)}
-        />
         <main>
           <div className="row">
             <div className="column1">
@@ -109,19 +131,33 @@ class App extends React.Component {
                 selectedBuilding={this.state.selectedBuilding}
               />
             </div>
+            <fieldset>
+              <legend>Add a Building</legend>
+              <AddBuilding
+                data={this.state.myData}
+                addCode={this.state.addCode}
+                addName={this.state.addName}
+                addLat={this.state.addLat}
+                addLong={this.state.addLong}
+                addAddress={this.state.addAddress}
+                valuesUpdate={this.valuesUpdate.bind(this)}
+                addBuildingUpdate={this.addBuildingUpdate.bind(this)}
+                />
+            </fieldset>
+            <br></br>
+            <fieldset>
+              <legend>Remove a Building</legend>
+              <RemoveBuilding
+                data={this.state.myData}
+                remCode={this.state.remCode}
+                updateRemove={this.updateRemove.bind(this)}
+                remBuilding={this.remBuilding.bind(this)}
+              />
+            </fieldset>
           </div>
-          <AddBuilding
-            data={this.state.myData}
-            addCode={this.state.addCode}
-            addName={this.state.addName}
-            addLat={this.state.addLat}
-            addLong={this.state.addLong}
-            addAddress={this.state.addAddress}
-            valuesUpdate={this.valuesUpdate.bind(this)}
-            addBuildingUpdate={this.addBuildingUpdate.bind(this)}
-          />
           <Credit />
         </main>
+      </div>
       </div>
     );
   }
