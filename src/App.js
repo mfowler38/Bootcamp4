@@ -2,6 +2,7 @@ import React from 'react';
 import Search from './components/Search';
 import ViewBuilding from './components/ViewBuilding';
 import BuildingList from './components/BuildingList';
+import AddBuilding from './components/AddBuilding';
 import Credit from './components/Credit';
 
 class App extends React.Component {
@@ -9,7 +10,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       filterText: '',
-      selectedBuilding: 0
+      selectedBuilding: 0,
+      addName: ''
     };
   }
 
@@ -25,8 +27,12 @@ class App extends React.Component {
     this.setState({
       selectedBuilding: id
     })
+  }
 
-    console.log(id)
+  addNameUpdate(value) {
+    this.setState({
+      addName: value
+    })
   }
 
   render() {
@@ -66,6 +72,11 @@ class App extends React.Component {
               />
             </div>
           </div>
+          <AddBuilding
+            data={this.props.data}
+            addName={this.state.addName}
+            addNameUpdate={this.addNameUpdate.bind(this)}
+          />
           <Credit />
         </main>
       </div>
